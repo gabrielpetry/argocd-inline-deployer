@@ -64,6 +64,9 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: default
+  syncPolicy:
+    automated:
+      prune: true
 ```
 
 Argo CD's Helm OCI `repoURL` omits `oci://`. Configure a repository with `enableOCI: "true"` and credentials when required by your Argo CD setup or a private GHCR package. The destination namespace must exist, or configure Argo CD's `CreateNamespace=true` sync option.
