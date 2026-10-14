@@ -1,0 +1,30 @@
+manifests:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: inline-config
+      namespace: example
+    data:
+      literal: '{{ .Release.Name }}'
+      message: |
+        first line
+        second line
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: inline-app
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: inline-app
+      template:
+        metadata:
+          labels:
+            app: inline-app
+        spec:
+          containers:
+            - name: app
+              image: nginx:1.27.5
+              ports:
+                - containerPort: 80

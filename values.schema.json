@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "argocd-inline-deployer values",
+  "type": "object",
+  "required": ["manifests"],
+  "additionalProperties": false,
+  "properties": {
+    "manifests": {
+      "description": "Kubernetes resource objects, rendered without template evaluation.",
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["apiVersion", "kind"],
+        "properties": {
+          "apiVersion": { "type": "string", "minLength": 1 },
+          "kind": { "type": "string", "minLength": 1 },
+          "metadata": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    }
+  }
+}

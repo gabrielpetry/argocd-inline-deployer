@@ -1,0 +1,15 @@
+apiVersion: v2
+name: argocd-inline-deployer
+description: Deploy Kubernetes manifests supplied directly through Helm values.
+type: application
+version: 0.1.0
+keywords:
+  - kubernetes
+  - manifests
+  - argocd
+home: https://github.com/gabrielpetry/argocd-inline-deployer
+sources:
+  - https://github.com/gabrielpetry/argocd-inline-deployer
+maintainers:
+  - name: gabrielpetry
+    url: https://github.com/gabrielpetry
