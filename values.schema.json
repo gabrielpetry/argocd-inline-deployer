@@ -5,6 +5,11 @@
   "required": ["manifests"],
   "additionalProperties": false,
   "properties": {
+    "allow_secrets": {
+      "description": "Allow rendering Kubernetes Secret resources.",
+      "type": "boolean",
+      "default": false
+    },
     "manifests": {
       "description": "Kubernetes resource objects, rendered without template evaluation.",
       "type": "array",

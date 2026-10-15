@@ -1,3 +1,6 @@
+# Explicitly opt in to rendering Kubernetes Secrets.
+allow_secrets: false
+
 # Kubernetes resource objects to render as separate YAML documents.
 # Values are rendered literally: Helm template expressions are not evaluated.
 manifests: []

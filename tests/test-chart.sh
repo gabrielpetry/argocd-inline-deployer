@@ -32,6 +32,32 @@ assert_invalid 'missing kind' 'manifests: [{apiVersion: v1}]'
 assert_invalid 'empty apiVersion' 'manifests: [{apiVersion: "", kind: ConfigMap}]'
 assert_invalid 'invalid metadata' 'manifests: [{apiVersion: v1, kind: ConfigMap, metadata: []}]'
 
+assert_invalid 'non-boolean allow_secrets' 'allow_secrets: "true"'
+
+cat > "$workdir/secret.yaml" <<'EOF'
+manifests:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: test-secret
+    stringData:
+      password: test-only
+EOF
+for setting in default false; do
+  args=()
+  if [[ "$setting" == false ]]; then
+    args+=(--set allow_secrets=false)
+  fi
+  if "$HELM" template test . -f "$workdir/secret.yaml" "${args[@]}" > "$workdir/output" 2> "$workdir/error"; then
+    echo "FAIL: accepted Secret with allow_secrets=$setting" >&2
+    exit 1
+  fi
+  grep -Fq 'Secrets are disallowed you must enable the variable: allow_secrets: true' "$workdir/error"
+done
+"$HELM" template test . -f "$workdir/secret.yaml" --set allow_secrets=true > "$workdir/allowed.yaml"
+grep -q '^kind: Secret$' "$workdir/allowed.yaml"
+grep -q 'password: test-only' "$workdir/allowed.yaml"
+
 "$HELM" package . --destination "$workdir"
 archive="$(find "$workdir" -maxdepth 1 -name '*.tgz' -print)"
 "$HELM" lint --strict "$archive"
@@ -41,4 +67,4 @@ if tar -tzf "$archive" | grep -E '/(tests|\.github|\.git)/'; then
   echo 'FAIL: development files included in chart package' >&2
   exit 1
 fi
-printf 'PASS: empty values, literal multi-resource rendering, schema validation, and packaged chart\n'
+printf 'PASS: empty values, literal multi-resource rendering, schema validation, Secret opt-in, and packaged chart\n'

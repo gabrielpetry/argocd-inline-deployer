@@ -1,4 +1,7 @@
 {{- range .Values.manifests }}
+{{- if and (eq .kind "Secret") (not $.Values.allow_secrets) }}
+{{- fail "Secrets are disallowed you must enable the variable: allow_secrets: true" }}
+{{- end }}
 ---
 {{ toYaml . }}
 {{- end }}

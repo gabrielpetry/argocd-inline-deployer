@@ -34,6 +34,8 @@ helm upgrade --install example \
 
 `manifests` defaults to `[]`, rendering no resources. Each entry must be an object with non-empty `apiVersion` and `kind`. The schema validates the envelope, not the full Kubernetes API: validate resource-specific fields against your target cluster.
 
+Secrets are rejected by default with `Secrets are disallowed you must enable the variable: allow_secrets: true`. To explicitly allow `kind: Secret` resources, set the top-level boolean `allow_secrets: true` in your values.
+
 Values are literal data: strings such as `{{ .Release.Name }}` are **not** evaluated. Set resource names and any explicit namespaces yourself. Namespaced objects without `metadata.namespace` use the deployment namespace. Only supply trusted manifests; installation can create any resources permitted by the deploying identity. Do not commit secrets to values files.
 
 ## Argo CD
@@ -78,7 +80,7 @@ bash tests/test-chart.sh
 helm package . --destination dist
 ```
 
-Tests check empty defaults, multiple resources, literal strings, invalid values, and rendering from the packaged chart. Packaging excludes CI and test files.
+Tests check empty defaults, multiple resources, literal strings, invalid values, Secret rejection and opt-in, and rendering from the packaged chart. Packaging excludes CI and test files.
 
 ## Release to GHCR
 
