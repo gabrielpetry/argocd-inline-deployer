@@ -29,7 +29,7 @@ Install the published chart (available after the first release):
 ```sh
 helm upgrade --install example \
   oci://ghcr.io/gabrielpetry/argocd-inline-deployer \
-  --version 0.1.0 --namespace default -f my-values.yaml
+  --version 0.2.0 --namespace default -f my-values.yaml
 ```
 
 `manifests` defaults to `[]`, rendering no resources. Each entry must be an object with non-empty `apiVersion` and `kind`. The schema validates the envelope, not the full Kubernetes API: validate resource-specific fields against your target cluster.
@@ -53,7 +53,7 @@ spec:
   source:
     repoURL: ghcr.io/gabrielpetry
     chart: argocd-inline-deployer
-    targetRevision: 0.1.0
+    targetRevision: 0.2.0
     helm:
       valuesObject:
         manifests:
@@ -84,13 +84,13 @@ Tests check empty defaults, multiple resources, literal strings, invalid values,
 
 ## Release to GHCR
 
-1. Set `version` in `Chart.yaml` to the desired semantic version (initially `0.1.0`).
+1. Set `version` in `Chart.yaml` to the desired semantic version (currently `0.2.0`).
 2. Commit and push the chart to `main`.
 3. Create and push a matching tag:
 
    ```sh
-   git tag v0.1.0
-   git push origin v0.1.0
+   git tag v0.2.0
+   git push origin v0.2.0
    ```
 
 Pull requests and pushes to `main` run linting, rendering tests, and packaging; the package is uploaded as a workflow artifact. A `v*` tag runs the same checks, verifies the tag matches the chart version, and publishes to `oci://ghcr.io/<owner>/argocd-inline-deployer` using `GITHUB_TOKEN`. No separate registry secret is required. GitHub Actions must be allowed to write packages.
